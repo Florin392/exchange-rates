@@ -1,27 +1,24 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import { combineReducers } from '@reduxjs/toolkit';
-
-const rootReducer = combineReducers({});
+import currencyReducer from '@/features/currency/currencySlice';
 
 const persistConfig = {
   key: 'root',
   storage,
-  version: 1,
+  whitelist: ['baseCurrency', 'targetCurrencies', 'selectedEndDate'],
 };
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+const persistedCurrencyReducer = persistReducer(persistConfig, currencyReducer);
 
 export const store = configureStore({
-  reducer: persistedReducer,
+  reducer: { currency: persistedCurrencyReducer },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoreActions: ['persist/PERSIST', 'persist/REHYDRATE'],
+        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
       },
     }),
-  devTools: import.meta.env.MODE !== 'production',
 });
 
 export const persistor = persistStore(store);
