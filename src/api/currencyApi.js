@@ -1,10 +1,12 @@
 import axios from 'axios';
-import { API_BASE_URL, API_ENDPOINTS, MESSAGES } from '@/config/index.js';
+import { API_BASE_URL, API_ENDPOINTS, MESSAGES } from '@/config';
 
 // GET all currencies
 export const getCurrencyList = async () => {
   try {
-    const response = await axios.get(`${API_BASE_URL}${API_ENDPOINTS.CURRENCIES}`);
+    const response = await axios.get(
+      'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies.json'
+    );
     return response.data;
   } catch (error) {
     throw new Error(`${MESSAGES.ERROR.CURRENCY_LIST}: ${error.message}`);
@@ -14,8 +16,8 @@ export const getCurrencyList = async () => {
 // GET exchange rates for a specific currency on a specific date
 export const getRatesForDate = async (currencyCode, date) => {
   try {
-    const endpoint = API_ENDPOINTS.RATES(date, currencyCode);
-    const response = await axios.get(`${API_BASE_URL}${endpoint}`);
+    const url = `https://${date}.currency-api.pages.dev/v1/currencies/${currencyCode.toLowerCase()}.json`;
+    const response = await axios.get(url);
     return response.data;
   } catch (error) {
     throw new Error(`${MESSAGES.ERROR.API}: ${error.message}`);
@@ -25,8 +27,7 @@ export const getRatesForDate = async (currencyCode, date) => {
 // GET exchange rates for multiple dates (7-day chart)
 export const getRatesForMultipleDates = async (currencyCode, dates) => {
   try {
-    const promises = dates.map((date) => getRatesForDate(currencyCode, date));
-    const results = await Promise.all(promises);
+    const results = await Promise.all(dates.map((date) => getRatesForDate(currencyCode, date)));
     return results;
   } catch (error) {
     throw new Error(`${MESSAGES.ERROR.API}: ${error.message}`);
@@ -39,18 +40,18 @@ export const getRatesForDateRange = async (baseCurrency, targetCurrencies, dates
     const allRates = await getRatesForMultipleDates(baseCurrency, dates);
 
     // Transform data into a more usable format
-    const formattedData = allRates.map((rateData, index) => {
+    return allRates.map((rateData, index) => {
       const date = dates[index];
       const rates = rateData[baseCurrency.toLowerCase()];
 
       // Filter only target currencies
       const filteredRates = {};
-      targetCurrencies.forEach((currency) => {
+      for (const currency of targetCurrencies) {
         const currencyKey = currency.toLowerCase();
-        if (rates && rates[currencyKey]) {
+        if (rates?.[currencyKey]) {
           filteredRates[currency.toUpperCase()] = rates[currencyKey];
         }
-      });
+      }
 
       return {
         date,
@@ -58,8 +59,6 @@ export const getRatesForDateRange = async (baseCurrency, targetCurrencies, dates
         rates: filteredRates,
       };
     });
-
-    return formattedData;
   } catch (error) {
     throw new Error(`${MESSAGES.ERROR.API}: ${error.message}`);
   }
