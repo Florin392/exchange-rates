@@ -1,0 +1,37 @@
+@use '@/styles/global.scss' as *;
+
+.datePickerContainer {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+  width: 100%;
+}
+
+.dateInput {
+  background-color: $white;
+  border-radius: $border-radius-sm;
+
+  input[type='date'] {
+    font-family: $font-family-primary;
+    font-size: $font-size-base;
+    padding: $spacing-sm;
+    cursor: pointer;
+
+    &::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+      filter: invert(0.5);
+      transition: filer 0.2s ease;
+
+      &:hover {
+        filter: invert(0.3);
+      }
+    }
+  }
+}
+
+.helperText {
+  display: block;
+  margin-top: $spacing-xs;
+  font-size: $font-size-sm;
+  line-height: 1.4;
+}
