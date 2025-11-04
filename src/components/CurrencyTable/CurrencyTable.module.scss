@@ -1,0 +1,90 @@
+@use '@/styles/global.scss' as *;
+
+.tableContainer {
+  margin-top: $spacing-md;
+  border-radius: $border-radius-md;
+  box-shadow: $shadow-md;
+  overflow: auto;
+
+  @include mobile {
+    max-height: 400px;
+  }
+}
+
+.table {
+  min-width: 800px;
+
+  @include mobile {
+    min-width: 600px;
+  }
+}
+
+.headerCell {
+  background-color: $primary-color;
+  color: $white;
+  font-weight: $font-weight-bold;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.tableRow {
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba($primary-color, 0.05);
+  }
+
+  &:nth-of-type(even) {
+    background-color: rgba($grey-color, 0.02);
+  }
+}
+
+.currencyCell {
+  font-weight: $font-weight-medium;
+  white-space: nowrap;
+  position: sticky;
+  left: 0;
+  background-color: $white;
+  z-index: 5;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.05);
+}
+
+.rateCell {
+  white-space: nowrap;
+  font-family: 'Roboto Mono', monospace;
+}
+
+.changeCell {
+  white-space: nowrap;
+}
+
+.changeChip {
+  font-weight: $font-weight-medium;
+  min-width: 80px;
+}
+
+.actionCell {
+  white-space: nowrap;
+}
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-xl;
+  min-height: 300px;
+}
+
+.emptyContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-xl;
+  min-height: 200px;
+  background-color: rgba($grey-color, 0.05);
+  border-radius: $border-radius-md;
+  margin-top: $spacing-md;
+}
